@@ -1,0 +1,13 @@
+{
+    "name": "spring-blog",
+    "version": "1.0.0",
+    "description": "Parse spring blog links to markdown",
+    "main": "main.js",
+    "scripts": {
+        "start": "node main.js"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "jsdom": "^20.0.0"
+    }
+}
