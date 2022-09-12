@@ -13,10 +13,10 @@ async function write2README(articleInfoList) {
         const data = articleInfoList
             .filter(item => type.name === item.category)
             .map(item => articleInfo2MarkdownContent(item))
-            .join("\n")
+            .join('')
 
         if (data.length == 0) { continue; }
-        
+
         promiseAll.push(fs.appendFile(type.file, data, err => {
             if (err) {
                 console.error('write error', err)
@@ -28,7 +28,11 @@ async function write2README(articleInfoList) {
 }
 
 function articleInfo2MarkdownContent(article) {
-    return `- [${article.title}](${article.url})`;
+    return `- ${getDate(article.postTime)} [${article.title}](${article.url}) \n`;
+}
+
+function getDate(postTime) {
+    return postTime.split(' ')[0]
 }
 
 module.exports = { write2README }
