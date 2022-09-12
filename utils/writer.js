@@ -1,32 +1,34 @@
 const fs = require('fs')
 
-async function write2README(articleInfoList) {
-    const data = articleInfoList.map((val) => articleInfo2MarkdownContent(val)).join("\n")
+const Category = [
+    { name: "Engineering", file: "./README.md" },
+    { name: "Releases", file: "./release.md" },
+    { name: "News and Events", file: "./newsAndEvents.md" },
+]
 
-    await fs.appendFile('./README.md', data, err => {
-        if (err) {
-            console.error(err)
-        }
-    });
+async function write2README(articleInfoList) {
+    const promiseAll = []
+
+    for (let type of Category) {
+        const data = articleInfoList
+            .filter(item => type.name === item.category)
+            .map(item => articleInfo2MarkdownContent(item))
+            .join("\n")
+
+        if (data.length == 0) { continue; }
+        
+        promiseAll.push(fs.appendFile(type.file, data, err => {
+            if (err) {
+                console.error('write error', err)
+            }
+        }))
+    }
+
+    await Promise.all(promiseAll)
 }
 
-/**
- * Format: 
- * ### Title
- * Author | PostTimt | Category | [READ MORE](http://xxx)
- * 
- * Intro
- * 
- * ---
- */
 function articleInfo2MarkdownContent(article) {
-    return `## ${article.title}
-${article.author} | ${article.postTime} | ${article.category} | [READ MORE](${article.url})
-
-${article.intro}
-
----
-`;
+    return `- [${article.title}](${article.url})`;
 }
 
 module.exports = { write2README }
