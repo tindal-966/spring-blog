@@ -3,7 +3,7 @@ const fs = require('fs')
 async function write2README(articleInfoList) {
     const data = articleInfoList.map((val) => articleInfo2MarkdownContent(val)).join("\n")
 
-    await fs.appendFileSync('./README.md', data, err => {
+    await fs.appendFile('./README.md', data, err => {
         if (err) {
             console.error(err)
         }
